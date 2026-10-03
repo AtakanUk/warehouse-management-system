@@ -1,0 +1,88 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="Warehouse.Web.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title><%: Page.Title %> · Warehouse WMS</title>
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" runat="server" />
+    <link rel="stylesheet" href="<%: Asset("~/Content/lib/bootstrap/bootstrap.min.css") %>" />
+    <link rel="stylesheet" href="<%: Asset("~/Content/site.css") %>" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server" />
+</head>
+<body class="<%: IsAuthenticated ? "app-body" : "auth-body" %>">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <form id="MainForm" runat="server" novalidate>
+        <div class="app">
+            <asp:PlaceHolder ID="NavigationPanel" runat="server">
+                <div class="sidebar-shell">
+                    <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Main navigation">
+                        <div class="offcanvas-header">
+                            <span class="brand"><%= Icons.Get("warehouse", "brand-icon") %> Warehouse<span class="brand-accent">WMS</span></span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebar" aria-label="Close menu"></button>
+                        </div>
+                        <div class="offcanvas-body sidebar-body">
+                            <a class="brand d-none d-lg-flex" href="<%: ResolveUrl("~/") %>"><%= Icons.Get("warehouse", "brand-icon") %> Warehouse<span class="brand-accent">WMS</span></a>
+
+                            <nav class="side-nav">
+                                <a class="<%: NavClass("~/", exact: true) %>" href="<%: ResolveUrl("~/") %>"><%= Icons.Get("dashboard") %> Dashboard</a>
+
+                                <span class="side-nav-label">Inventory</span>
+                                <a class="<%: NavClass("~/products") %>" href="<%: ResolveUrl("~/products") %>"><%= Icons.Get("package") %> Products</a>
+                                <a class="<%: NavClass("~/inventory", exact: true) %>" href="<%: ResolveUrl("~/inventory") %>"><%= Icons.Get("layers") %> Stock levels</a>
+                                <a class="<%: NavClass("~/inventory/receive") %>" href="<%: ResolveUrl("~/inventory/receive") %>"><%= Icons.Get("receive") %> Receive goods</a>
+                                <a class="<%: NavClass("~/inventory/movements") %>" href="<%: ResolveUrl("~/inventory/movements") %>"><%= Icons.Get("history") %> Stock ledger</a>
+
+                                <span class="side-nav-label">Outbound</span>
+                                <a class="<%: NavClass("~/orders", exclude: "~/orders/new") %>" href="<%: ResolveUrl("~/orders") %>"><%= Icons.Get("orders") %> Orders</a>
+                                <a class="<%: NavClass("~/orders/new") %>" href="<%: ResolveUrl("~/orders/new") %>"><%= Icons.Get("plus") %> New order</a>
+                                <a class="<%: NavClass("~/picking") %>" href="<%: ResolveUrl("~/picking") %>"><%= Icons.Get("picking") %> Picking</a>
+                                <a class="<%: NavClass("~/shipping") %>" href="<%: ResolveUrl("~/shipping") %>"><%= Icons.Get("truck") %> Shipping</a>
+
+                                <span class="side-nav-label">Partners</span>
+                                <a class="<%: NavClass("~/customers") %>" href="<%: ResolveUrl("~/customers") %>"><%= Icons.Get("users") %> Customers</a>
+                                <a class="<%: NavClass("~/carriers") %>" href="<%: ResolveUrl("~/carriers") %>"><%= Icons.Get("route") %> Carriers</a>
+                            </nav>
+
+                            <div class="sidebar-user">
+                                <span class="avatar" aria-hidden="true"><%: UserInitial %></span>
+                                <span class="sidebar-user-name"><%: UserName %></span>
+                                <asp:LinkButton ID="SignOutButton" runat="server" CssClass="sign-out" OnClick="SignOut_Click" CausesValidation="false" ToolTip="Sign out">
+                                    <%= Icons.Get("logout") %><span class="visually-hidden">Sign out</span>
+                                </asp:LinkButton>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </asp:PlaceHolder>
+
+            <div class="app-main">
+                <asp:PlaceHolder ID="TopBar" runat="server">
+                    <header class="topbar d-lg-none">
+                        <button class="btn btn-icon" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Open menu">
+                            <%= Icons.Get("menu") %>
+                        </button>
+                        <a class="brand" href="<%: ResolveUrl("~/") %>"><%= Icons.Get("warehouse", "brand-icon") %> Warehouse<span class="brand-accent">WMS</span></a>
+                    </header>
+                </asp:PlaceHolder>
+
+                <main id="main" class="app-content" tabindex="-1">
+                    <asp:Repeater ID="AlertList" runat="server" ItemType="Warehouse.Web.Infrastructure.Alert">
+                        <ItemTemplate>
+                            <div class="<%#: Item.CssClass %> alert-dismissible fade show" role="alert">
+                                <%#: Item.Message %>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </ItemTemplate>
+                    </asp:Repeater>
+
+                    <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+                </main>
+            </div>
+        </div>
+    </form>
+    <script src="<%: Asset("~/Scripts/lib/bootstrap/bootstrap.bundle.min.js") %>"></script>
+    <script src="<%: Asset("~/Scripts/site.js") %>"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Warehouse.Core</RootNamespace>
+    <AssemblyName>Warehouse.Core</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="6.5.1" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+  </ItemGroup>
+
+  <!-- The SQL scripts are the single source of truth for the schema; embed them so the
+       application and the integration tests provision databases from the same files. -->
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\database\schema.sql" Link="Data\Scripts\schema.sql" LogicalName="Warehouse.Core.Data.Scripts.schema.sql" />
+    <EmbeddedResource Include="..\..\database\seed.sql" Link="Data\Scripts\seed.sql" LogicalName="Warehouse.Core.Data.Scripts.seed.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Warehouse.Core.Tests" />
+  </ItemGroup>
+
+</Project>

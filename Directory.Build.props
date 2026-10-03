@@ -1,0 +1,13 @@
+<Project>
+  <!-- Shared build settings for every project in the solution. -->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Newly published package advisories should be reported, not break unrelated builds. -->
+    <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+    <Company>Atakan Ük</Company>
+    <Product>Warehouse Management System</Product>
+    <Copyright>Copyright © 2026 Atakan Ük</Copyright>
+  </PropertyGroup>
+</Project>

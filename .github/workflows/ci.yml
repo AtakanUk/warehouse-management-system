@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Start SQL Server LocalDB
+        # The integration tests skip themselves if LocalDB is not available on the runner.
+        continue-on-error: true
+        run: sqllocaldb start MSSQLLocalDB
+
+      - name: Build (including Web Forms markup)
+        run: msbuild Warehouse.sln -restore -m -p:Configuration=Release -p:PrecompileWebForms=true -v:minimal
+
+      - name: Test
+        run: dotnet test tests/Warehouse.Core.Tests/Warehouse.Core.Tests.csproj -c Release --no-build --logger "trx;LogFileName=results.trx" --results-directory TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults/*.trx

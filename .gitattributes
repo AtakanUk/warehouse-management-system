@@ -1,0 +1,8 @@
+* text=auto
+
+*.png binary
+*.svg text
+
+# Third-party front-end assets; keep them out of language statistics
+src/Warehouse.Web/Content/lib/** linguist-vendored
+src/Warehouse.Web/Scripts/lib/** linguist-vendored
